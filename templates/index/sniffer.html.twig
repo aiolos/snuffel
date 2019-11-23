@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1>Ritten voor {{ sniffer }}</h1>
+Van {{ fromDate }} tot {{ toDate }}<br>
+    <div id="snuffelMap" style="height: 700px;"></div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        var snuffelMap = L.map('snuffelMap').setView([52.05809, 5.07176], 13);
+        L.tileLayer(
+            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+            }).addTo(snuffelMap);
+
+        var latlngs = {{ polyline }};
+        var polyline = L.polyline(latlngs, {color: 'red'}).addTo(snuffelMap);
+
+        snuffelMap.fitBounds(polyline.getBounds());
+    </script>
+{% endblock %}

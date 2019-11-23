@@ -1,0 +1,16 @@
+snuffel:
+  image: webdevops/php-nginx:7.2
+  ports:
+    - 8086:80
+  environment:
+    - WEB_DOCUMENT_ROOT=/app/public/
+  volumes:
+    - ./:/app
+  links:
+    - mysql
+
+mysql:
+  image: mysql:5.7
+  environment:
+    MYSQL_ROOT_PASSWORD: ThisIsFarTooSimple
+    MYSQL_DATABASE: snuffel
