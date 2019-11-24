@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Repository;
 
@@ -22,7 +22,7 @@ class MeasurementRepository extends ServiceEntityRepository
      /**
       * @return Measurement[] Returns an array of Measurement objects
       */
-    public function findBySnifferInRange(string $sniffer, int $from, int $to)
+    public function findBySnifferInRange(string $sniffer, int $from, int $to): array
     {
         return $this->createQueryBuilder('m')
             ->andWhere('m.sniffer = :sniffer')
@@ -36,16 +36,4 @@ class MeasurementRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-
-    /*
-    public function findOneBySomeField($value): ?Measurement
-    {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

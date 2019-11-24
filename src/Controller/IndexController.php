@@ -91,6 +91,10 @@ class IndexController extends AbstractController
         return $this->render('index/snif.html.twig', [
             'measurements' => $measurements,
             'foundMeasurements' => $foundMeasurements,
+            'date' => $fromDate,
+            'sniffer' => $sniffer,
+            'tomorrow' => $fromDate->copy()->addDay(),
+            'yesterday' => $fromDate->copy()->subDay(),
         ]);
     }
 
