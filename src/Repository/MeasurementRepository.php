@@ -36,4 +36,25 @@ class MeasurementRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findAllSniffers(): array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery('SELECT distinct m.sniffer FROM App\Entity\Measurement m');
+
+        return $query->getResult();
+    }
+
+    public function findAllDatesForSniffer(string $sniffer): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'SELECT distinct FROM_UNIXTIME(m.time, "%Y-%m-%d") as snifDay FROM measurement m where sniffer = :sniffer order by snifDay desc';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['sniffer' => $sniffer]);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $stmt->fetchAll();
+    }
 }

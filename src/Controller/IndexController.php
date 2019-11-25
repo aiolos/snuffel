@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Measurement;
+use App\Repository\MeasurementRepository;
 use Carbon\Carbon;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,16 +21,33 @@ class IndexController extends AbstractController
     public function index(Request $request)
     {
         if ($request->getMethod() === Request::METHOD_POST) {
-            return $this->redirect('/sniffer/' . $request->get('sniffer') . '/snif/' . $request->get('date'));
+            return $this->redirect('/sniffer/' . $request->get('sniffer'));
         }
 
-        return $this->render('index/index.html.twig', []);
+        $sniffers = $this->getRepository()->findAllSniffers();
+
+        return $this->render('index/index.html.twig', [
+            'sniffers' => $sniffers,
+        ]);
     }
 
     /**
-     * @Route("/sniffer/{sniffer}/show/{from}/{to}", name="sniffer")
+     * @Route("/sniffer/{sniffer}", name="show")
      */
-    public function show(string $sniffer, string $from, string $to)
+    public function show(Request $request, string $sniffer)
+    {
+
+        return $this->render('index/show.html.twig', [
+            'sniffer' => $sniffer,
+            'dates' => $this->getRepository()->findAllDatesForSniffer($sniffer),
+            'today' => Carbon::today(),
+        ]);
+    }
+
+    /**
+     * @Route("/sniffer/{sniffer}/show/{from}/{to}", name="showMeasurements")
+     */
+    public function showMap(string $sniffer, string $from, string $to)
     {
         $fromDate = Carbon::createFromFormat('Y-m-d', $from)->startOfDay();
         $toDate = Carbon::createFromFormat('Y-m-d', $to)->endOfDay();
@@ -41,11 +59,13 @@ class IndexController extends AbstractController
             $polyline[] = [$record->getLatitude(), $record->getLongitude()];
         }
 
-        return $this->render('index/sniffer.html.twig', [
+        return $this->render('index/map.html.twig', [
             'sniffer' => $sniffer,
             'results' => $results,
             'fromDate' => $fromDate,
             'toDate' => $toDate,
+            'dayEarlier' => $fromDate->copy()->subDay(),
+            'dayLater' => $toDate->copy()->addDay(),
             'polyline' => json_encode($polyline),
         ]);
     }
@@ -100,14 +120,10 @@ class IndexController extends AbstractController
 
     private function getData(string $sniffer, Carbon $fromDate, Carbon $toDate): array
     {
-        $cache = new FilesystemAdapter();
+        $client = HttpClient::create();
+        $response = $client->request('GET', $this->createUrl($sniffer, $fromDate, $toDate));
 
-        return $cache->get($sniffer . $fromDate->timestamp . $toDate->timestamp, function () use ($sniffer, $fromDate, $toDate) {
-            $client = HttpClient::create();
-            $response = $client->request('GET', $this->createUrl($sniffer, $fromDate, $toDate));
-
-            return $response->toArray();
-        });
+        return $response->toArray();
     }
 
     private function createUrl(string $sniffer, Carbon $fromDate, Carbon $toDate): string
@@ -115,7 +131,7 @@ class IndexController extends AbstractController
         return $this->baseUrl . "SELECT * FROM%20snuffelfiets_gdpr(" . $fromDate->timestamp . ", " . $toDate->timestamp . ") where entity = '" . $sniffer . "'";
     }
 
-    private function getRepository(): ObjectRepository
+    private function getRepository(): MeasurementRepository
     {
         return $this->getDoctrine()->getRepository(Measurement::class);
     }

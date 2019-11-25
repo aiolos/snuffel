@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="flex mb-4">
+        <h1 class="font-bold text-xl">Sniffer {{ sniffer }}</h1>
+        <a href="/sniffer/{{ sniffer }}/show/{{ today|date('Y-m-d') }}/{{ today|date('Y-m-d') }}" class="btn btn-primary">Toon ritten van vandaag</a>
+        <p>Datums:
+            <ul>
+                {% for day in dates %}
+                    <li><a href="/sniffer/{{ sniffer }}/show/{{ day.snifDay }}/{{ day.snifDay }}">{{ day.snifDay }}</a></li>
+                {% endfor %}
+            </ul>
+        </p>
+    </div>
+{% endblock %}
