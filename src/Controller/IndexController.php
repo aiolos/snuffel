@@ -51,10 +51,13 @@ class IndexController extends AbstractController
         $toDate = Carbon::createFromFormat('Y-m-d', $to)->endOfDay();
 
         $results = $this->getDoctrine()->getRepository(Measurement::class)->findBySnifferInRange($sniffer, $fromDate->timestamp, $toDate->timestamp);
-        $polyline = [];
+        $polylines = [];
         /** @var Measurement $record */
         foreach ($results as $record) {
-            $polyline[] = [$record->getLatitude(), $record->getLongitude()];
+            if (!array_key_exists($record->getTrip(), $polylines)) {
+                $polylines[$record->getTrip()] = [];
+            }
+            $polylines[$record->getTrip()][] = [$record->getLatitude(), $record->getLongitude()];
         }
 
         return $this->render('index/map.html.twig', [
@@ -64,7 +67,7 @@ class IndexController extends AbstractController
             'toDate' => $toDate,
             'dayEarlier' => $fromDate->copy()->subDay(),
             'dayLater' => $toDate->copy()->addDay(),
-            'polyline' => json_encode($polyline),
+            'polylines' => $polylines,
         ]);
     }
 

@@ -24,8 +24,9 @@ Snuffel <i class="fa fa-angle-double-right"></i> <a class="" href="/sniffer/{{ s
                 maxZoom: 18,
             }).addTo(snuffelMap);
 
-        var latlngs = {{ polyline }};
-        var polyline = L.polyline(latlngs, {color: 'red'}).addTo(snuffelMap);
+        {% for polyline in polylines %}
+            var polyline = L.polyline({{ polyline|json_encode() }}, {color: 'red'}).addTo(snuffelMap);
+        {% endfor %}
 
         snuffelMap.fitBounds(polyline.getBounds());
     </script>
