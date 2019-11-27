@@ -1,10 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    Snuffel <i class="fa fa-angle-double-right"></i> <a class="" href="/sniffer/{{ sniffer }}">{{ sniffer }}</a>
     <div class="flex mb-4">
-        <h1 class="font-bold text-xl">Sniffer {{ sniffer }}</h1>
-        <a href="/sniffer/{{ sniffer }}/show/{{ today|date('Y-m-d') }}/{{ today|date('Y-m-d') }}" class="btn btn-primary">Toon ritten van vandaag</a>
-        <p>Datums:
+        <h2>Sniffer</h2>
+        Vandaag:
+        <a href="/sniffer/{{ sniffer }}/show/{{ today|date('Y-m-d') }}/{{ today|date('Y-m-d') }}" class="btn btn-primary"><i class="fa fa-map"></i> Toon</a>
+        <a href="/sniffer/{{ sniffer }}/snif/{{ today|date('Y-m-d') }}" class="btn btn-primary"><i class="fas fa-file-import"></i> Snif</a>
+        <p>Beschikbare data:
             <ul>
                 {% for day in dates %}
                     <li><a href="/sniffer/{{ sniffer }}/show/{{ day.snifDay }}/{{ day.snifDay }}">{{ day.snifDay }}</a></li>

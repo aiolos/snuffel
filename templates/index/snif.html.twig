@@ -1,13 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1 class="text-xl font-bold">Ingelezen voor: {{ date|date("d-m-Y") }}</h1>
-    <h2 class="text-lg font-bold">Aantal ingelezen punten {{ measurements }}</h2>
-    <h2 class="text-lg font-bold">Reeds gevonden punten {{ foundMeasurements }}</h2>
-    <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/show/{{ date|date("Y-m-d") }}/{{ date|date("Y-m-d") }}">Bekijk op kaart</a>
-    <p>
-    <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/snif/{{ yesterday|date("Y-m-d") }}"><< Dag eerder ({{ yesterday|date("d-m-Y") }})</a>
+    Snuffel <i class="fa fa-angle-double-right"></i> <a class="" href="/sniffer/{{ sniffer }}">{{ sniffer }}</a> <i class="fa fa-angle-double-right"></i> Snif
 
-    <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/snif/{{ tomorrow|date("Y-m-d") }}">Dag later >> ({{ tomorrow|date("d-m-Y") }})</a>
+    <h3 class="">Inlezen</h3>
+    Datum: {{ date|date("d-m-Y") }}<br>
+    Aantal ingelezen punten {{ measurements }}<br>
+    Reeds gevonden punten {{ foundMeasurements }}<br>
+    <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/show/{{ date|date("Y-m-d") }}/{{ date|date("Y-m-d") }}"><i class="fa fa-map"></i> Bekijk op kaart</a>
+    <p>
+    <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/snif/{{ yesterday|date("Y-m-d") }}"><i class="fa fa-angle-double-left"></i> {{ yesterday|date("d-m-Y") }}</a>
+
+    <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/snif/{{ tomorrow|date("Y-m-d") }}"><i class="fa fa-angle-double-right"></i> {{ tomorrow|date("d-m-Y") }}</a>
     </p>
 {% endblock %}

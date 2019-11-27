@@ -2,21 +2,21 @@
 
 {% block body %}
     <div class="flex mb-4">
-        <h1 class="font-bold text-xl">Voer snuffelid in</h1>
+        <h4>Kies een sniffer:</h4>
+        <ul>
+            {% for sniffer in sniffers %}
+                <li><a href="/sniffer/{{ sniffer.sniffer }}">{{ sniffer.sniffer }}</a></li>
+            {% endfor %}
+        </ul>
+
         <form class="" action="/" method="post">
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="sniffer">
-                    Snuffel ID (3567 ...)
+                    <h4>Of voer snuffelID in:</h4>
                 </label>
                 <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="sniffer" name="sniffer" type="text" placeholder="3567 ...">
                 <input class="btn btn-primary" type="submit" value="Inlezen">
             </div>
         </form>
-        Sniffers:
-        <ul>
-        {% for sniffer in sniffers %}
-            <li><a href="/sniffer/{{ sniffer.sniffer }}">{{ sniffer.sniffer }}</a></li>
-        {% endfor %}
-        </ul>
     </div>
 {% endblock %}

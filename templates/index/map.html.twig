@@ -1,14 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<h1 class="text-xl font-bold">Ritten voor {{ sniffer }}</h1>
-Van {{ fromDate|date("d-m-Y H:i") }} tot {{ toDate|date("d-m-Y H:i") }}<br>
-    <div id="snuffelMap" style="height: 700px;"></div>
+Snuffel <i class="fa fa-angle-double-right"></i> <a class="" href="/sniffer/{{ sniffer }}">{{ sniffer }}</a> <i class="fa fa-angle-double-right"></i> Ritten
 
-    <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/snif/{{ fromDate|date("Y-m-d") }}">Opnieuw inlezen ({{ fromDate|date("d-m-Y") }})</a>
-    <a class="btn btn-primary" href="/sniffer/{{ sniffer }}">Bekijk alle dagen van deze sniffer</a>
-    <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/show/{{ dayEarlier|date("Y-m-d") }}/{{ dayEarlier|date("Y-m-d") }}">Dag eerder</a>
-    <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/show/{{ dayLater|date("Y-m-d") }}/{{ dayLater|date("Y-m-d") }}">Dag later</a>
+<h3>Ritten {{ fromDate|date("d-m-Y") }}</h3>
+{#Van {{ fromDate|date("d-m-Y H:i") }} tot {{ toDate|date("d-m-Y H:i") }}<br>#}
+    <div>
+        <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/show/{{ dayEarlier|date("Y-m-d") }}/{{ dayEarlier|date("Y-m-d") }}">Dag eerder</a>
+        <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/snif/{{ fromDate|date("Y-m-d") }}">Snif</a>
+        {#<a class="btn btn-primary" href="/sniffer/{{ sniffer }}">Bekijk alle dagen van deze sniffer</a>#}
+        <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/show/{{ dayLater|date("Y-m-d") }}/{{ dayLater|date("Y-m-d") }}">Dag later</a>
+    </div>
+    <div class="h-100">
+        <div id="snuffelMap" class="map" style="width: 100%; height: 78vh;"></div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
