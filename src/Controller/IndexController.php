@@ -43,31 +43,35 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/sniffer/{sniffer}/show/{from}/{to}", name="showMeasurements")
+     * @Route("/sniffer/{sniffer}/show/{from}/{to}/{particles}", name="showMeasurements")
      */
-    public function showMap(string $sniffer, string $from, string $to)
+    public function showMap(string $sniffer, string $from, string $to, string $particles = 'pm25')
     {
         $fromDate = Carbon::createFromFormat('Y-m-d', $from)->startOfDay();
         $toDate = Carbon::createFromFormat('Y-m-d', $to)->endOfDay();
 
-        $results = $this->getDoctrine()->getRepository(Measurement::class)->findBySnifferInRange($sniffer, $fromDate->timestamp, $toDate->timestamp);
+        $measurements = $this->getDoctrine()->getRepository(Measurement::class)->findBySnifferInRange($sniffer, $fromDate->timestamp, $toDate->timestamp);
         $polylines = [];
         /** @var Measurement $record */
-        foreach ($results as $record) {
-            if (!array_key_exists($record->getTrip(), $polylines)) {
-                $polylines[$record->getTrip()] = [];
+        foreach ($measurements as $measurement) {
+            if (!array_key_exists($measurement->getTrip(), $polylines)) {
+                $polylines[$measurement->getTrip()] = [];
             }
-            $polylines[$record->getTrip()][] = [$record->getLatitude(), $record->getLongitude()];
+            $polylines[$measurement->getTrip()][] = [
+                'lat' => $measurement->getLatitude(),
+                'lng' => $measurement->getLongitude(),
+                'particles' => ($particles === 'pm10' ? $measurement->getPm10() : $measurement->getPm25())
+            ];
         }
 
         return $this->render('index/map.html.twig', [
             'sniffer' => $sniffer,
-            'results' => $results,
             'fromDate' => $fromDate,
             'toDate' => $toDate,
             'dayEarlier' => $fromDate->copy()->subDay(),
             'dayLater' => $toDate->copy()->addDay(),
             'polylines' => $polylines,
+            'particles' => $particles,
         ]);
     }
 

@@ -4,12 +4,13 @@
 Snuffel <i class="fa fa-angle-double-right"></i> <a class="" href="/sniffer/{{ sniffer }}">{{ sniffer }}</a> <i class="fa fa-angle-double-right"></i> Ritten
 
 <h3>Ritten {{ fromDate|date("d-m-Y") }}</h3>
+    Toon fijnstof < {{ particles is same as('pm10') ? 10 : 2.5 }} &mu;g
 {#Van {{ fromDate|date("d-m-Y H:i") }} tot {{ toDate|date("d-m-Y H:i") }}<br>#}
     <div>
         <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/show/{{ dayEarlier|date("Y-m-d") }}/{{ dayEarlier|date("Y-m-d") }}">Dag eerder</a>
         <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/snif/{{ fromDate|date("Y-m-d") }}">Snif</a>
-        {#<a class="btn btn-primary" href="/sniffer/{{ sniffer }}">Bekijk alle dagen van deze sniffer</a>#}
         <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/show/{{ dayLater|date("Y-m-d") }}/{{ dayLater|date("Y-m-d") }}">Dag later</a>
+        <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/show/{{ fromDate|date("Y-m-d") }}/{{ toDate|date("Y-m-d") }}/{{ particles is same as('pm10') ? 'pm25' : 'pm10' }}">Toon {{ particles is same as('pm10') ? '2.5' : '10' }}&mu;g</a>
     </div>
     <div class="h-100">
         <div id="snuffelMap" class="map" style="width: 100%; height: 78vh;"></div>
@@ -25,8 +26,55 @@ Snuffel <i class="fa fa-angle-double-right"></i> <a class="" href="/sniffer/{{ s
             }).addTo(snuffelMap);
 
         {% for polyline in polylines %}
-            var polyline = L.polyline({{ polyline|json_encode() }}, {color: 'red'}).addTo(snuffelMap);
+            var polyline = L.multiOptionsPolyline({{ polyline|json_encode()|raw }}, {
+            multiOptions: {
+                optionIdxFn: function (latLng) {
+                    var i,
+                        altThresholds = [3, 6, 9, 12, 18, 24, 30, 38, 46, 60, 100, 200];
+
+                    for (i = 0; i < altThresholds.length; ++i) {
+                        if (latLng.particles <= altThresholds[i]) {
+                            return i;
+                        }
+                    }
+                    return altThresholds.length;
+                },
+                options: [
+                    {color: '#0020C5'}, {color: '#006DF8'}, {color: '#2DCDFB'},
+                    {color: '#C4ECFD'}, {color: '#FFFED0'}, {color: '#FFFC4D'},
+                    {color: '#F4E645'}, {color: '#FFB255'}, {color: '#FF9845'},
+                    {color: '#FE7626'}, {color: '#FF0A17'}, {color: '#DC0625'}
+                ]
+            },
+            weight: 5,
+            lineCap: 'butt',
+            opacity: 0.75,
+            smoothFactor: 1}).addTo(snuffelMap);
         {% endfor %}
+
+        /*Legend specific*/
+        var legend = L.control({ position: "bottomleft" });
+
+        legend.onAdd = function(map) {
+            var div = L.DomUtil.create("div", "legend");
+            div.innerHTML += "<h4>Legenda</h4>";
+            div.innerHTML += '<i style="background: #0020C5"></i><span>< 3</span><br>';
+            div.innerHTML += '<i style="background: #006DF8"></i><span>3-6</span><br>';
+            div.innerHTML += '<i style="background: #2DCDFB"></i><span>6-9</span><br>';
+            div.innerHTML += '<i style="background: #C4ECFD"></i><span>9-12</span><br>';
+            div.innerHTML += '<i style="background: #FFFED0"></i><span>12-18</span><br>';
+            div.innerHTML += '<i style="background: #FFFC4D"></i><span>18-24</span><br>';
+            div.innerHTML += '<i style="background: #F4E645"></i><span>24-30</span><br>';
+            div.innerHTML += '<i style="background: #FFB255"></i><span>30-38</span><br>';
+            div.innerHTML += '<i style="background: #FF9845"></i><span>38-46</span><br>';
+            div.innerHTML += '<i style="background: #FE7626"></i><span>46-60</span><br>';
+            div.innerHTML += '<i style="background: #FF0A17"></i><span>60-100</span><br>';
+            div.innerHTML += '<i style="background: #DC0625"></i><span>> 100</span><br>';
+
+            return div;
+        };
+
+        legend.addTo(snuffelMap);
 
         snuffelMap.fitBounds(polyline.getBounds());
     </script>

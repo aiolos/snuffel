@@ -5,12 +5,17 @@
     <div class="flex mb-4">
         <h2>Sniffer</h2>
         Vandaag:
-        <a href="/sniffer/{{ sniffer }}/show/{{ today|date('Y-m-d') }}/{{ today|date('Y-m-d') }}" class="btn btn-primary"><i class="fa fa-map"></i> Toon</a>
+        <a href="/sniffer/{{ sniffer }}/show/{{ today|date('Y-m-d') }}/{{ today|date('Y-m-d') }}/pm25" class="btn btn-primary"><i class="fa fa-map"></i> Toon 2.5&mu;g</a>
+        <a href="/sniffer/{{ sniffer }}/show/{{ today|date('Y-m-d') }}/{{ today|date('Y-m-d') }}/pm10" class="btn btn-primary"><i class="fa fa-map"></i> Toon 10&mu;g</a>
         <a href="/sniffer/{{ sniffer }}/snif/{{ today|date('Y-m-d') }}" class="btn btn-primary"><i class="fas fa-file-import"></i> Snif</a>
         <p>Beschikbare data:
             <ul>
                 {% for day in dates %}
-                    <li><a href="/sniffer/{{ sniffer }}/show/{{ day.snifDay }}/{{ day.snifDay }}">{{ day.snifDay }}</a></li>
+                    <li><a href="/sniffer/{{ sniffer }}/show/{{ day.snifDay }}/{{ day.snifDay }}">{{ day.snifDay }}</a>
+                        <a href="/sniffer/{{ sniffer }}/show/{{ day.snifDay }}/{{ day.snifDay }}/pm25" class="btn btn-sm btn-outline-secondary"><i class="fa fa-map"></i> 2.5&mu;g</a>
+                        <a href="/sniffer/{{ sniffer }}/show/{{ day.snifDay }}/{{ day.snifDay }}/pm10" class="btn btn-sm btn-outline-secondary"><i class="fa fa-map"></i> 10&mu;g</a>
+                        <a href="/sniffer/{{ sniffer }}/snif/{{ day.snifDay }}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-file-import"></i> Snif</a>
+                    </li>
                 {% endfor %}
             </ul>
         </p>
