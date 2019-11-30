@@ -1,17 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-Snuffel <i class="fa fa-angle-double-right"></i> <a class="" href="/sniffer/{{ sniffer }}">{{ sniffer }}</a> <i class="fa fa-angle-double-right"></i> Ritten
+Snuffel <i class="fas fa-angle-double-right"></i> <a href="/sniffer/{{ sniffer }}">{{ sniffer }}</a> <i class="fas fa-angle-double-right"></i> Ritten
 
-<h3>Ritten {{ fromDate|date("d-m-Y") }}</h3>
-    Toon fijnstof < {{ particles is same as('pm10') ? 10 : 2.5 }} &mu;g
-{#Van {{ fromDate|date("d-m-Y H:i") }} tot {{ toDate|date("d-m-Y H:i") }}<br>#}
-    <div>
-        <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/show/{{ dayEarlier|date("Y-m-d") }}/{{ dayEarlier|date("Y-m-d") }}">Dag eerder</a>
-        <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/snif/{{ fromDate|date("Y-m-d") }}">Snif</a>
-        <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/show/{{ dayLater|date("Y-m-d") }}/{{ dayLater|date("Y-m-d") }}">Dag later</a>
-        <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/show/{{ fromDate|date("Y-m-d") }}/{{ toDate|date("Y-m-d") }}/{{ particles is same as('pm10') ? 'pm25' : 'pm10' }}">Toon {{ particles is same as('pm10') ? '2.5' : '10' }}&mu;g</a>
-    </div>
+<h4>Ritten {{ fromDate|date("d-m") }}: < {{ particles is same as('pm10') ? 10 : 2.5 }} &mu;m</h4>
+    <a href="/sniffer/{{ sniffer }}/show/{{ dayEarlier|date("Y-m-d") }}/{{ dayEarlier|date("Y-m-d") }}"><i class="fas fa-angle-double-left"></i> {{ dayEarlier|date("d-m") }}</a>
+    |
+    <a href="/sniffer/{{ sniffer }}/show/{{ fromDate|date("Y-m-d") }}/{{ toDate|date("Y-m-d") }}/{{ particles is same as('pm10') ? 'pm25' : 'pm10' }}"><i class="fas fa-map"></i>  {{ particles is same as('pm10') ? '2.5' : '10' }}&mu;m</a>
+    |
+    <a href="/sniffer/{{ sniffer }}/snif/{{ fromDate|date("Y-m-d") }}"><i class="fas fa-redo"></i></a>
+    |
+    <a href="/sniffer/{{ sniffer }}/show/{{ dayLater|date("Y-m-d") }}/{{ dayLater|date("Y-m-d") }}">{{ dayLater|date("d-m") }} <i class="fas fa-angle-double-right"></i></a><br>
+    Toon fijnstof < {{ particles is same as('pm10') ? 10 : 2.5 }} &mu;m in microgram per kubieke meter.
     <div class="h-100">
         <div id="snuffelMap" class="map" style="width: 100%; height: 78vh;"></div>
     </div>

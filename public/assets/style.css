@@ -17,6 +17,7 @@
 .legend span {
     position: relative;
     bottom: 3px;
+    top: 1px;
 }
 
 .legend i {

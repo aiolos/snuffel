@@ -7,10 +7,11 @@
     Datum: {{ date|date("d-m-Y") }}<br>
     Aantal ingelezen punten {{ measurements }}<br>
     Reeds gevonden punten {{ foundMeasurements }}<br>
-    <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/show/{{ date|date("Y-m-d") }}/{{ date|date("Y-m-d") }}"><i class="fa fa-map"></i> Bekijk op kaart</a>
-    <p>
-    <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/snif/{{ yesterday|date("Y-m-d") }}"><i class="fa fa-angle-double-left"></i> {{ yesterday|date("d-m-Y") }}</a>
+    <a class="btn btn-sm btn-primary" href="/sniffer/{{ sniffer }}/show/{{ date|date("Y-m-d") }}/{{ date|date("Y-m-d") }}/pm25"><i class="fas fa-map"></i> <2.5&mu;m</a>
+    <a class="btn btn-sm btn-primary" href="/sniffer/{{ sniffer }}/show/{{ date|date("Y-m-d") }}/{{ date|date("Y-m-d") }}/pm10"><i class="fas fa-map"></i> <10&mu;m</a>
+    <br><br>
+    <a class="btn btn-sm btn-primary" href="/sniffer/{{ sniffer }}/snif/{{ yesterday|date("Y-m-d") }}"><i class="fa fa-angle-double-left"></i> {{ yesterday|date("d-m-Y") }}</a>
 
-    <a class="btn btn-primary" href="/sniffer/{{ sniffer }}/snif/{{ tomorrow|date("Y-m-d") }}"><i class="fa fa-angle-double-right"></i> {{ tomorrow|date("d-m-Y") }}</a>
-    </p>
+    <a class="btn btn-sm btn-primary" href="/sniffer/{{ sniffer }}/snif/{{ tomorrow|date("Y-m-d") }}">{{ tomorrow|date("d-m-Y") }} <i class="fa fa-angle-double-right"></i></a>
+    </br>
 {% endblock %}
