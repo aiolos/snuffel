@@ -13,9 +13,9 @@
                 <a href="/sniffer/{{ sniffer }}/show/{{ day.snifDay }}/{{ day.snifDay }}">{{ day.snifDay }}</a>
                 <a href="/sniffer/{{ sniffer }}/show/{{ day.snifDay }}/{{ day.snifDay }}/pm25" class="btn btn-sm btn-outline-secondary"><2.5&mu;m</a>
                 <a href="/sniffer/{{ sniffer }}/show/{{ day.snifDay }}/{{ day.snifDay }}/pm10" class="btn btn-sm btn-outline-secondary"><10&mu;m</a>
-                <a href="/sniffer/{{ sniffer }}/snif/{{ day.snifDay }}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-redo"></i> Snif</a>
+                <a href="/sniffer/{{ sniffer }}/measurements/{{ day.snifDay }}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-list"></i></a>
+                <a href="/sniffer/{{ sniffer }}/snif/{{ day.snifDay }}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-redo"></i></a>
                 <br>
             {% endfor %}
-        </p>
     </div>
 {% endblock %}

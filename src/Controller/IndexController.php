@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class IndexController extends AbstractController
 {
     private $baseUrl = "https://ckan.dataplatform.nl/api/3/action/datastore_search_sql?sql=";
+
     /**
      * @Route("/", name="index")
      */
@@ -50,7 +51,7 @@ class IndexController extends AbstractController
         $fromDate = Carbon::createFromFormat('Y-m-d', $from)->startOfDay();
         $toDate = Carbon::createFromFormat('Y-m-d', $to)->endOfDay();
 
-        $measurements = $this->getDoctrine()->getRepository(Measurement::class)->findBySnifferInRange($sniffer, $fromDate->timestamp, $toDate->timestamp);
+        $measurements = $this->getRepository()->findBySnifferInRange($sniffer, $fromDate->timestamp, $toDate->timestamp);
         $polylines = [];
         /** @var Measurement $record */
         foreach ($measurements as $measurement) {
@@ -72,6 +73,23 @@ class IndexController extends AbstractController
             'dayLater' => $toDate->copy()->addDay(),
             'polylines' => $polylines,
             'particles' => $particles,
+        ]);
+    }
+
+    /**
+     * @Route("/sniffer/{sniffer}/measurements/{date}", name="measurements")
+     */
+    public function measurements(Request $request, string $sniffer, string $date)
+    {
+        $fromDate = Carbon::createFromFormat('Y-m-d', $date)->startOfDay();
+        $toDate = Carbon::createFromFormat('Y-m-d', $date)->endOfDay();
+
+        $measurements = $this->getRepository()->findBySnifferInRange($sniffer, $fromDate->timestamp, $toDate->timestamp);
+
+        return $this->render('index/measurements.html.twig', [
+            'sniffer' => $sniffer,
+            'date' => $date,
+            'measurements' => $measurements,
         ]);
     }
 
